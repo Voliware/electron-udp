@@ -1,6 +1,8 @@
 # electron-udp
 A simple electron app to create UDP clients and servers to send and receive datagrams. You can add N UDP clients on any host and port and N UDP servers on any host and port. This is a dead simple app to test against other UDP clients or servers. 
 
+![Screenshot](docs/screenshot.png)
+
 ## Development
 Run `npm install`. During development, you can use `npm start` to start the electron application. 
 
