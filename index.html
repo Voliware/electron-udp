@@ -17,10 +17,13 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-4">
-                <h5>UDP Clients</h5>
+            <div class="col">
+                <h5>
+                    UDP Clients
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-modal">Add</button>
+                </h5>
                 <table class="table">
                     <thead>
                         <tr>
@@ -30,25 +33,15 @@
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
-                    <tbody id="client:table">
+                    <tbody id="client-table">
                     </tbody>
                 </table>
-                <hr>
-                <h5>Create Client</h5>
-                <form id="client:form">
-                    <div class="mb-3">
-                        <label class="form-label">Remote IP Address</label>
-                        <input type="string" name="ip" class="form-control" value="0.0.0.0">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Remote Port</label>
-                        <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
-                    </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </form>
             </div>
-            <div class="col-8">
-                <h5>UDP Servers</h5>
+            <div class="col">
+                <h5>
+                    UDP Servers
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#server-modal">Add</button>
+                </h5>
                 <table class="table">
                     <thead>
                         <tr>
@@ -58,36 +51,69 @@
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
-                    <tbody id="server:table">
+                    <tbody id="server-table">
                     </tbody>
                 </table>
-                <hr>
-                <h5>Create Server</h5>
-                <form id="server:form">
-                    <div class="mb-3">
-                        <label class="form-label">Local IP Address</label>
-                        <input type="string" name="host" class="form-control" value="0.0.0.0">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Local Port</label>
-                        <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
-                    </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </form>
             </div>
         </div>
     </div>
-    <template id="client:row:template">
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="client-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add UDP Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="client-form">
+                        <div class="mb-3">
+                            <label class="form-label">Remote IP Address</label>
+                            <input type="string" name="ip" class="form-control" value="0.0.0.0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Remote Port</label>
+                            <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="server-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add UDP Server</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="server-form">
+                        <div class="mb-3">
+                            <label class="form-label">Local IP Address</label>
+                            <input type="string" name="host" class="form-control" value="0.0.0.0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Local Port</label>
+                            <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="client-row-template">
         <tr>
             <td>
                 <span data-name="id"></span>
             </td>
             <td>
-                <input type="text" name="message1" class="form-control" placeholder="Enter Data">
+                <textarea name="message1" class="form-control" placeholder="Enter Data"></textarea>
                 <button type="button" name="send" class="btn btn-sm btn-success">Send</button>
             </td>
             <td>
-                <input type="text" name="message2" class="form-control" placeholder="Enter Data">
+                <textarea name="message2" class="form-control" placeholder="Enter Data"></textarea>
                 <input type="number" name="delay" class="form-control" value="1000" placeholder="Interval in ms">
                 <button type="button" name="enable" class="btn btn-sm btn-primary">Enable</button>
             </td>
@@ -96,7 +122,7 @@
             </td>
         </tr>
     </template>
-    <template id="server:row:template">
+    <template id="server-row-template">
         <tr>
             <td>
                 <span data-name="id"></span>

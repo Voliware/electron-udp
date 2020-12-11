@@ -14,13 +14,13 @@ class ElectronUdp {
          * Table to display all clients
          * @type {HTMLElement}
          */
-        this.client_table = document.getElementById('client:table');
+        this.client_table = document.getElementById('client-table');
 
         /**
          * Form to add a new client
          * @type {HTMLElement}
          */
-        this.client_form = document.getElementById('client:form');
+        this.client_form = document.getElementById('client-form');
 
         /**
          * Map of client settings. These are not clients themselves
@@ -40,13 +40,13 @@ class ElectronUdp {
          * Table to display all servers
          * @type {HTMLElement}
          */
-        this.server_table = document.getElementById('server:table');
+        this.server_table = document.getElementById('server-table');
         
         /**
          * Form to add a new server
          * @type {HTMLElement}
          */
-        this.server_form = document.getElementById('server:form');
+        this.server_form = document.getElementById('server-form');
         
         /**
          * Map of servers
@@ -84,7 +84,7 @@ class ElectronUdp {
      * @param {Number} params.port 
      */
     createClient({ip, port}){
-        let id = `${ip}:${port}`;
+        let id = `${ip}-${port}`;
         if(this.clients.get(id)){
             return;
         }
@@ -102,7 +102,7 @@ class ElectronUdp {
         if(!this.clients.get(id)){
             return;
         }
-        document.getElementById(`client:row:${id}`).remove();
+        document.getElementById(`client-row-${id}`).remove();
         this.clients.delete(id);
     }
 
@@ -112,10 +112,10 @@ class ElectronUdp {
      */
     createClientRow(id){
         // Clone the template
-        let template = document.getElementById('client:row:template');
+        let template = document.getElementById('client-row-template');
         let element = template.content.cloneNode(true);
         let tr = element.querySelector('tr');
-        tr.id = `client:row:${id}`;
+        tr.id = `client-row-${id}`;
         // Set the client id 
         element.querySelector('[data-name="id"]').innerHTML = id
         // Setup the send message input and button
@@ -154,7 +154,7 @@ class ElectronUdp {
 
     /**
      * Send a message 
-     * @param {String} id - Client ID, ie localhost:1234
+     * @param {String} id - Client ID, ie localhost-1234
      * @param {String} message 
      */
     sendMessage(id, message){
@@ -175,7 +175,7 @@ class ElectronUdp {
      * @param {Number} params.port
      */
     createServer({host, port}){
-        let id = `${host}:${port}`
+        let id = `${host}-${port}`
         if(this.servers.get(id)){
             return;
         }
@@ -199,14 +199,14 @@ class ElectronUdp {
      */
     createServerRow(id){
         // Clone the template
-        let template = document.getElementById('server:row:template');
+        let template = document.getElementById('server-row-template');
         let element = template.content.cloneNode(true);
         let tr = element.querySelector('tr');
-        tr.id = `server:row:${id}`;
+        tr.id = `server-row-${id}`;
         // Set the client id 
         element.querySelector('[data-name="id"]').innerHTML = id
         let messages = element.querySelector('[data-name="messages"]');
-        messages.id = `server:messages:${id}`;
+        messages.id = `server-messages-${id}`;
         // Setup the clear messages button
         let clear = element.querySelector('[name="clear"]');
         clear.addEventListener('click', (event) => {
@@ -227,7 +227,7 @@ class ElectronUdp {
      * @param {String} message 
      */
     appendToServerMessages(id, message){
-        let messages = document.getElementById(`server:messages:${id}`);
+        let messages = document.getElementById(`server-messages-${id}`);
         let date = new Date();
         let time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`;
         messages.innerHTML += `[${time}]${message}\n`;
@@ -246,7 +246,7 @@ class ElectronUdp {
             return;
         }
         server.close();
-        document.getElementById(`server:row:${id}`).remove();
+        document.getElementById(`server-row-${id}`).remove();
         this.servers.delete(id);
     }
 }
