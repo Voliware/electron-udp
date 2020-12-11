@@ -26,14 +26,16 @@
                         <tr>
                             <th scope="col">Host:Port</th>
                             <th scope="col">Send Message</th>
+                            <th scope="col">Interval</th>
+                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
-                    <tbody id="client-table">
+                    <tbody id="client:table">
                     </tbody>
                 </table>
                 <hr>
                 <h5>Create Client</h5>
-                <form id="client-form">
+                <form id="client:form">
                     <div class="mb-3">
                         <label class="form-label">Remote IP Address</label>
                         <input type="string" name="ip" class="form-control" value="0.0.0.0">
@@ -52,14 +54,16 @@
                         <tr>
                             <th scope="col">Host:Port</th>
                             <th scope="col">Messages</th>
+                            <th scope="col">Clear</th>
+                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
-                    <tbody id="server-table">
+                    <tbody id="server:table">
                     </tbody>
                 </table>
                 <hr>
                 <h5>Create Server</h5>
-                <form id="server-form">
+                <form id="server:form">
                     <div class="mb-3">
                         <label class="form-label">Local IP Address</label>
                         <input type="string" name="host" class="form-control" value="0.0.0.0">
@@ -73,6 +77,41 @@
             </div>
         </div>
     </div>
+    <template id="client:row:template">
+        <tr>
+            <td>
+                <span data-name="id"></span>
+            </td>
+            <td>
+                <input type="text" name="message1" class="form-control" placeholder="Enter Data">
+                <button type="button" name="send" class="btn btn-sm btn-success">Send</button>
+            </td>
+            <td>
+                <input type="text" name="message2" class="form-control" placeholder="Enter Data">
+                <input type="number" name="delay" class="form-control" value="1000" placeholder="Interval in ms">
+                <button type="button" name="enable" class="btn btn-sm btn-primary">Enable</button>
+            </td>
+            <td>
+                <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
+            </td>
+        </tr>
+    </template>
+    <template id="server:row:template">
+        <tr>
+            <td>
+                <span data-name="id"></span>
+            </td>
+            <td>
+                <pre data-name="messages" class="messages"></pre>
+            </td>
+            <td>
+                <button type="button" name="clear" class="btn btn-sm btn-primary">Clear</button>
+            </td>
+            <td>
+                <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
+            </td>
+        </tr>
+    </template>
     <script src="vendor/bootstrap.bundle.min.js"></script>
     <script src="js/app.js"></script>
     <script>const electron_udp = new ElectronUdp();</script>
