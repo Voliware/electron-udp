@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Electron UDP</title>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-title" content=""/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+    <link rel="stylesheet" href="vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <h5>UDP Clients</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Host:Port</th>
+                            <th scope="col">Send Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="client-table">
+                    </tbody>
+                </table>
+                <hr>
+                <h5>Create Client</h5>
+                <form id="client-form">
+                    <div class="mb-3">
+                        <label class="form-label">Remote IP Address</label>
+                        <input type="string" name="ip" class="form-control" value="0.0.0.0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Remote Port</label>
+                        <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+            <div class="col-8">
+                <h5>UDP Servers</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Host:Port</th>
+                            <th scope="col">Messages</th>
+                        </tr>
+                    </thead>
+                    <tbody id="server-table">
+                    </tbody>
+                </table>
+                <hr>
+                <h5>Create Server</h5>
+                <form id="server-form">
+                    <div class="mb-3">
+                        <label class="form-label">Local IP Address</label>
+                        <input type="string" name="host" class="form-control" value="0.0.0.0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Local Port</label>
+                        <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="vendor/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>const electron_udp = new ElectronUdp();</script>
+</body>
+</html>

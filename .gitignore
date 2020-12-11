@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Dist files
+electron-udp-win32-x64
+electron-udp.code-workspace

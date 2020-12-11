@@ -1,0 +1,31 @@
+{
+  "name": "@voliware/electron-udp",
+  "version": "1.0.0",
+  "description": "A simple electron app to create UDP clients and servers to send and receive datagrams",
+  "main": "index.js",
+  "scripts": {
+    "build": "electron-packager .",
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Voliware/electron-udp.git"
+  },
+  "keywords": [
+    "udp",
+    "server",
+    "client",
+    "electron"
+  ],
+  "author": "Anthony Agostino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Voliware/electron-udp/issues"
+  },
+  "homepage": "https://github.com/Voliware/electron-udp#readme",
+  "devDependencies": {
+    "electron": "^11.0.4",
+    "electron-packager": "^15.2.0"
+  }
+}
