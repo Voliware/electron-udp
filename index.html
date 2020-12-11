@@ -19,10 +19,11 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-6">
                 <h5>
                     UDP Clients
                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-modal">Add</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-generator">Generate Data</button>
                 </h5>
                 <table class="table">
                     <thead>
@@ -37,7 +38,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col">
+            <div class="col-6">
                 <h5>
                     UDP Servers
                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#server-modal">Add</button>
@@ -54,6 +55,23 @@
                     <tbody id="server-table">
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="client-generator">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Random Data Generator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="generator">
+                        <textarea name="random" class="form-control" placeholder="Press the Generate Button"></textarea>
+                        <input name="length" type="number" class="form-control" value="128">
+                        <button type="button" name="generate" class="btn btn-sm btn-primary">Generate</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -139,6 +157,9 @@
         </tr>
     </template>
     <script src="vendor/bootstrap.bundle.min.js"></script>
+    <script src="js/generator.js"></script>
+    <script src="js/clientManager.js"></script>
+    <script src="js/serverManager.js"></script>
     <script src="js/app.js"></script>
     <script>const electron_udp = new ElectronUdp();</script>
 </body>
