@@ -27,6 +27,12 @@ class Generator {
         this.length = this.wrapper.querySelector('[name="length"]');
 
         /**
+         * The copy to clipboard button
+         * @type {HTMLElement}
+         */
+        this.copy = this.wrapper.querySelector('[name="copy"]');
+
+        /**
          * The generate button
          * @type {HTMLElement}
          */
@@ -37,6 +43,12 @@ class Generator {
             this.textarea.value = '';
             let data = this.generateData(this.length.value);
             this.textarea.value = data;
+        });
+
+        // On click copy data from textarea to clipboard
+        this.copy.addEventListener('click', (event) => {
+            this.textarea.select();
+            document.execCommand('copy');
         });
     }
 
