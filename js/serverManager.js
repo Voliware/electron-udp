@@ -12,7 +12,7 @@ class ServerManager {
          * Table to display all servers
          * @type {HTMLElement}
          */
-        this.server_table = document.getElementById('server-table');
+        this.server_elements = document.getElementById('servers');
         
         /**
          * Form to add a new server
@@ -31,8 +31,8 @@ class ServerManager {
             event.preventDefault();
             let formdata = new FormData(this.server_form);
             this.createServer({
-                host: formdata.get('host'),
-                port: formdata.get('port')
+                local_address: formdata.get('local.address'),
+                local_port: formdata.get('local.port')
             });
         });
     }
@@ -42,82 +42,36 @@ class ServerManager {
      * Add it to the servers map.
      * When messages are received, append to the server message output.
      * @param {Object} params
-     * @param {String} params.host
-     * @param {Number} params.port
+     * @param {String} params.local_address
+     * @param {Number} params.local_port
      */
-    createServer({host, port}){
-        let id = `${host}-${port}`
+    createServer({local_address, local_port}){
+        const id = `${local_address}:${local_port}`
         if(this.servers.get(id)){
             return;
         }
-        // Create the row first so we can append starting messages 
-        this.createServerRow(id);
-        let server = Dgram.createSocket('udp4');
-		server.on('listening', () => {
-            this.appendToServerMessages(id, `Listening ${id}`)
-		});
-		server.on('message', (message, rinfo) => {
-            this.appendToServerMessages(id, message)
-        });
-        this.appendToServerMessages(id, `Start ${id}`)
-        server.bind(port, host);
-        this.servers.set(id, server);
-    }
 
-    /**
-     * Create a server row.
-     * @param {String} id 
-     */
-    createServerRow(id){
-        // Clone the template
-        let template = document.getElementById('server-row-template');
-        let element = template.content.cloneNode(true);
-        let tr = element.querySelector('tr');
-        tr.id = `server-row-${id}`;
-        // Set the client id 
-        element.querySelector('[data-name="id"]').innerHTML = id
-        let messages = element.querySelector('[data-name="messages"]');
-        messages.id = `server-messages-${id}`;
-        // Setup the clear messages button
-        let clear = element.querySelector('[name="clear"]');
-        clear.addEventListener('click', (event) => {
-            messages.innerHTML = '';
-        });
-        // Setup the delete button
-        let del = element.querySelector('[name="delete"]');
-        del.addEventListener('click', (event) => {
+        const server = new Server(local_address, local_port);
+        server.on('delete', () => {
             this.deleteServer(id);
         });
-        // Append to table
-        this.server_table.appendChild(element);
-    }
-
-    /**
-     * Append a message to a server message output.
-     * @param {String} id - Id of the server
-     * @param {String} message 
-     */
-    appendToServerMessages(id, message){
-        let messages = document.getElementById(`server-messages-${id}`);
-        let date = new Date();
-        let time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`;
-        messages.innerHTML += `[${time}]${message}\n`;
-        messages.scrollTop = messages.scrollHeight;
+        this.servers.set(id, server);
+        this.server_elements.appendChild(server.getElement());
+        server.initialize();
     }
 
     /**
      * Delete a server.
      * Remove it from the server map
-     * Remove the row from the server table.
+     * Remove the element from the server table.
      * @param {String} id 
      */
     deleteServer(id){
-        let server = this.servers.get(id);
-        if(!server){
-            return;
+        const server = this.servers.get(id);
+        if(server){
+            server.deinitialize();
+            server.remove();
+            this.servers.delete(id);
         }
-        server.close();
-        document.getElementById(`server-row-${id}`).remove();
-        this.servers.delete(id);
     }
 }

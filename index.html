@@ -14,51 +14,40 @@
     <meta name="author" content="">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
     <link rel="stylesheet" href="vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/client.css">
+    <link rel="stylesheet" href="css/server.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-6">
-                <h5>
-                    UDP Clients
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-modal">Add</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-generator">Generate Data</button>
-                </h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Host:Port</th>
-                            <th scope="col">Send Message</th>
-                            <th scope="col">Interval</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody id="client-table">
-                    </tbody>
-                </table>
+                <div class="d-flex mb-2">
+                    <div class="flex-50">
+                        <h5>UDP Clients</h5>
+                    </div>
+                    <div class="flex-50 text-end">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#client-modal">Add</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#generator-modal">Generate Data</button>
+                    </div>
+                </div>
+                <div id="clients"></div>
             </div>
             <div class="col-6">
-                <h5>
-                    UDP Servers
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#server-modal">Add</button>
-                </h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Host:Port</th>
-                            <th scope="col">Messages</th>
-                            <th scope="col">Clear</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody id="server-table">
-                    </tbody>
-                </table>
+                <div class="d-flex mb-2">
+                    <div class="flex-50">
+                        <h5>UDP Servers</h5>
+                    </div>
+                    <div class="flex-50 text-end">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#server-modal">Add</button>
+                    </div>
+                </div>
+                <div id="servers"></div>
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" data-backdrop="static" id="client-generator">
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="generator-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -67,10 +56,12 @@
                 </div>
                 <div class="modal-body">
                     <div id="generator">
-                        <textarea name="random" class="form-control" placeholder="Press the Generate Button"></textarea>
-                        <input name="length" type="number" class="form-control" value="128">
-                        <button type="button" name="generate" class="btn btn-sm btn-primary">Generate</button>
-                        <button type="button" name="copy" class="btn btn-sm btn-primary">Copy to Clipboard</button>
+                        <div class="d-grid gap-2 mb-2">
+                            <textarea name="random" class="form-control" placeholder="Press the Generate Button"></textarea>
+                            <input name="length" type="number" class="form-control" value="128">
+                            <button type="button" name="generate" class="btn btn-sm btn-primary">Generate</button>
+                            <button type="button" name="copy" class="btn btn-sm btn-primary">Copy to Clipboard</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,12 +77,16 @@
                 <div class="modal-body">
                     <form id="client-form">
                         <div class="mb-3">
+                            <label class="form-label">Local Port</label>
+                            <input type="number" name="local.port" class="form-control" min="0" max="65535" value="0">
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Remote IP Address</label>
-                            <input type="string" name="ip" class="form-control" value="0.0.0.0">
+                            <input type="string" name="remote.address" class="form-control" value="0.0.0.0">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Remote Port</label>
-                            <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                            <input type="number" name="remote.port" class="form-control" min="0" max="65535" value="35000">
                         </div>
                         <button type="submit" class="btn btn-success">Submit</button>
                     </form>
@@ -110,11 +105,11 @@
                     <form id="server-form">
                         <div class="mb-3">
                             <label class="form-label">Local IP Address</label>
-                            <input type="string" name="host" class="form-control" value="0.0.0.0">
+                            <input type="string" name="local.address" class="form-control" value="0.0.0.0">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Local Port</label>
-                            <input type="number" name="port" class="form-control" min="0" max="65535" value="18000">
+                            <input type="number" name="local.port" class="form-control" min="0" max="65535" value="35000">
                         </div>
                         <button type="submit" class="btn btn-success">Submit</button>
                     </form>
@@ -122,44 +117,80 @@
             </div>
         </div>
     </div>
-    <template id="client-row-template">
-        <tr>
-            <td>
-                <span data-name="id"></span>
-            </td>
-            <td>
-                <textarea name="message1" class="form-control" placeholder="Enter Data"></textarea>
-                <button type="button" name="send" class="btn btn-sm btn-success">Send</button>
-            </td>
-            <td>
-                <textarea name="message2" class="form-control" placeholder="Enter Data"></textarea>
-                <input type="number" name="delay" class="form-control" value="1000" placeholder="Interval in ms">
-                <button type="button" name="enable" class="btn btn-sm btn-primary">Enable</button>
-            </td>
-            <td>
-                <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
-            </td>
-        </tr>
+    <template id="client-template">
+        <div class="client card mb-2">
+            <strong class="card-header">
+                <div class="mb-2 d-flex">
+                    <div class="flex-50">
+                        <strong>Client</strong>
+                        <span>-</span>
+                        <span data-name="id"></span>
+                    </div>
+                    <div class="flex-50 text-end">
+                        <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
+                    </div>
+                </div>
+            </strong>
+            <div class="card-body">
+                <div class="card mb-2">
+                    <strong class="card-header">Send Message</strong>
+                    <div class="card-body">
+                        <div class="d-grid gap-2 mb-2">
+                            <textarea name="message" class="form-control" placeholder="Enter Data"></textarea>
+                            <div class="input-group">
+                                <span class="input-group-text">Encoding</span>
+                                <select class="form-select" name="encoding">
+                                    <option value="ascii">ASCII String</option>
+                                    <option value="hex">Hex</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text">Interval in ms</span>
+                                <input type="number" name="ms" class="form-control" min="0">
+                                <div class="input-group-text">
+                                    <input class="form-check-input" type="checkbox" name="repeat">
+                                </div>
+                            </div>
+                            <button type="button" name="send" class="btn btn-sm btn-success">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
-    <template id="server-row-template">
-        <tr>
-            <td>
-                <span data-name="id"></span>
-            </td>
-            <td>
-                <pre data-name="messages" class="messages"></pre>
-            </td>
-            <td>
-                <button type="button" name="clear" class="btn btn-sm btn-primary">Clear</button>
-            </td>
-            <td>
-                <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
-            </td>
-        </tr>
+    <template id="server-template">
+        <div class="server card mb-2">
+            <strong class="card-header">
+                <div class="mb-2 d-flex">
+                    <div class="flex-50">
+                        <strong>Server</strong>
+                        <span>-</span>
+                        <span data-name="id"></span>
+                    </div>
+                    <div class="flex-50 text-end">
+                        <button type="button" name="delete" class="btn btn-sm btn-danger">Delete</button>
+                    </div>
+                </div>
+            </strong>
+            <div class="card-body">
+                <div class="mb-2">
+                    <strong>Messages</strong>
+                    <pre data-name="messages" class="messages"></pre>
+                </div>
+                <div class="d-grid gap-2 mb-2">
+                    <button type="button" name="clear" class="btn btn-sm btn-primary">Clear</button>
+                </div>
+            </div>
+        </div>
     </template>
     <script src="vendor/bootstrap.bundle.min.js"></script>
+    <script src="js/node.js"></script>
     <script src="js/generator.js"></script>
+    <script src="js/clientElement.js"></script>
+    <script src="js/client.js"></script>
     <script src="js/clientManager.js"></script>
+    <script src="js/serverElement.js"></script>
+    <script src="js/server.js"></script>
     <script src="js/serverManager.js"></script>
     <script src="js/app.js"></script>
     <script>const electron_udp = new ElectronUdp();</script>

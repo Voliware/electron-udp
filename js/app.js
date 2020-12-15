@@ -1,5 +1,3 @@
-const Dgram = require('dgram');
-
 /**
  * Main application.
  */
