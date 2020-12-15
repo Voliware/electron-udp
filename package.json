@@ -1,6 +1,6 @@
 {
   "name": "@voliware/electron-udp",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "A simple electron app to create UDP clients and servers to send and receive datagrams",
   "main": "index.js",
   "scripts": {
