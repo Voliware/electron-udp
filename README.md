@@ -8,7 +8,7 @@ A simple electron app to create UDP clients and servers to send and receive data
 ![Adding a Server](docs/server.png)
 
 ## Data Generator
-![Data Generator](docs/generator.png)
+![Data Generator](docs/generate.png)
 
 ## Sending and Receiving Messages
 ![Sending Messages](docs/ui.png)
