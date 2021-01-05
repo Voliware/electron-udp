@@ -43,15 +43,15 @@ class Client extends Socket {
     }
 
     /**
-     * Get the ServerElement
-     * @returns {ServerElement}
+     * Get the ClientElement
+     * @returns {ClientElement}
      */
     getElement(){
         return this.element;
     }
 
     /**
-     * Remove the ServerElement
+     * Remove the ClientElement
      */
     remove(){
         this.element.remove();
