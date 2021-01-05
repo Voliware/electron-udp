@@ -43,12 +43,18 @@ class Client extends Socket {
     }
 
     /**
-     * Send a message
-     * @param {String} message 
+     * Get the ServerElement
+     * @returns {ServerElement}
      */
-    sendMessage(message){
-        const buffer = Buffer.from(message);
-        this.socket.send(buffer, this.remote_port, this.remote_address);
+    getElement(){
+        return this.element;
+    }
+
+    /**
+     * Remove the ServerElement
+     */
+    remove(){
+        this.element.remove();
     }
 
     /**
@@ -56,6 +62,15 @@ class Client extends Socket {
      */
     render(){
         this.element.setName(`${this.remote_address}:${this.remote_port}`);
+    }
+
+    /**
+     * Send a message
+     * @param {String} message 
+     */
+    sendMessage(message){
+        const buffer = Buffer.from(message);
+        this.socket.send(buffer, this.remote_port, this.remote_address);
     }
 
     /**

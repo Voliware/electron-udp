@@ -41,19 +41,4 @@ class Socket extends EventSystem {
     setSocket(socket){
         this.socket = socket;
     }
-
-    /**
-     * Get the ServerElement
-     * @returns {ServerElement}
-     */
-    getElement(){
-        return this.element;
-    }
-
-    /**
-     * Remove the ServerElement
-     */
-    remove(){
-        this.element.remove();
-    }
 }

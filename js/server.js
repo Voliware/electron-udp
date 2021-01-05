@@ -37,6 +37,21 @@ class Server extends Socket {
     }
 
     /**
+     * Get the ServerElement
+     * @returns {ServerElement}
+     */
+    getElement(){
+        return this.element;
+    }
+
+    /**
+     * Remove the ServerElement
+     */
+    remove(){
+        this.element.remove();
+    }
+
+    /**
      * Render the server's HTML element
      */
     render(){
