@@ -1,8 +1,8 @@
 /**
  * Server object with HTML element
- * @extends {EventSystem}
+ * @extends {Socket}
  */
-class Server extends EventSystem {
+class Server extends Socket {
 
     /**
      * Constructor
@@ -30,12 +30,31 @@ class Server extends EventSystem {
          */
         this.element = document.createElement('udp-server');
 
-        /**
-         * The socket to listen on
-         * @type {Socket}
-         */
-        this.socket = Dgram.createSocket('udp4');
-        
+        // On delete emit event upwards
+        this.element.addEventListener('delete', (event) => {
+            this.emit('delete');
+        });
+    }
+
+    /**
+     * Render the server's HTML element
+     */
+    render(){
+        this.element.setName(`${this.local_address}:${this.local_port}`);
+    }
+
+    /**
+     * Initialize the server.
+     * Render the element.
+     * Attach handlers to the socket.
+     * Socket must be set.
+     */
+    initialize(){
+        if(!this.socket){
+            console.error('Server socket has not been set');
+            return;
+        }
+
         // On listening append to the messages textarea
 		this.socket.on('listening', () => {
             this.element.appendMessage(`Listening`)
@@ -46,39 +65,6 @@ class Server extends EventSystem {
             this.element.appendMessage(message, rinfo)
         });
 
-        // On delete emit event upwards
-        this.element.addEventListener('delete', (event) => {
-            this.emit('delete');
-        });
-    }
-
-    /**
-     * Get the ServerElement
-     * @returns {ServerElement}
-     */
-    getElement(){
-        return this.element;
-    }
-
-    /**
-     * Remove the ServerElement
-     */
-    remove(){
-        this.element.remove();
-    }
-
-    /**
-     * Initialize and bind the socket
-     */
-    initialize(){
-        this.socket.bind(this.local_port, this.local_address);
-        this.element.setName(`${this.local_address}:${this.local_port}`);
-    }
-
-    /**
-     * Deinitialize and close the socket
-     */
-    deinitialize(){
-        this.socket.close();
+        this.render();
     }
 }

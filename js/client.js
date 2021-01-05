@@ -1,8 +1,8 @@
 /**
  * Client object with HTML element
- * @extends {EventSystem}
+ * @extends {Socket}
  */
-class Client extends EventSystem {
+class Client extends Socket {
 
     /**
      * Constructor
@@ -11,13 +11,7 @@ class Client extends EventSystem {
      * @param {Number} remote_port 
      */
     constructor(local_port, remote_address, remote_port){
-        super();
-        
-        /**
-         * Port to send messages from
-         * @type {Number}
-         */
-        this.local_port = local_port;
+        super(local_port);
 
         /**
          * IP to send messages to
@@ -37,12 +31,6 @@ class Client extends EventSystem {
          */
         this.element = document.createElement('udp-client');
 
-        /**
-         * The socket to listen on
-         * @type {Socket}
-         */
-        this.socket = Dgram.createSocket('udp4');
-
         // On delete emit event upwards
         this.element.addEventListener('delete', (event) => {
             this.emit('delete');
@@ -55,21 +43,6 @@ class Client extends EventSystem {
     }
 
     /**
-     * Get the ClientElement
-     * @returns {ClientElement}
-     */
-    getElement(){
-        return this.element;
-    }
-
-    /**
-     * Remove the ClientElement
-     */
-    remove(){
-        this.element.remove();
-    }
-
-    /**
      * Send a message
      * @param {String} message 
      */
@@ -79,17 +52,16 @@ class Client extends EventSystem {
     }
 
     /**
-     * Initialize and bind the socket
+     * Render the client's HTML element
      */
-    initialize(){
-        this.socket.bind(this.local_port);
+    render(){
         this.element.setName(`${this.remote_address}:${this.remote_port}`);
     }
 
     /**
-     * Deinitialize and close the socket
+     * Render the element.
      */
-    deinitialize(){
-        this.socket.close();
+    initialize(){
+        this.render();
     }
 }

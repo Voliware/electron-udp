@@ -1,12 +1,15 @@
 /**
  * Manages and adds UDP clients
+ * @extends {EventSystem}
  */
-class ClientManager {
+class ClientManager extends EventSystem {
 
     /**
      * Constructor
      */
     constructor(){
+        super();
+
         /**
          * Table to display all clients
          * @type {HTMLElement}
@@ -20,16 +23,15 @@ class ClientManager {
         this.client_form = document.getElementById('client-form');
 
         /**
-         * Map of client settings. These are not clients themselves
-         * as only one client is actually needed.
-         * @type {Map<String, Object>}
+         * Map of clients.
+         * @type {Map<String, Client>}
          */
         this.clients = new Map();
 
         // Create a new client when the client form is submitted
         this.client_form.addEventListener('submit', (event) => {
             event.preventDefault();
-            let formdata = new FormData(this.client_form);
+            const formdata = new FormData(this.client_form);
             this.createClient({
                 local_port: formdata.get('local.port'),
                 remote_address: formdata.get('remote.address'),
@@ -47,7 +49,7 @@ class ClientManager {
      * @param {Number} params.remote_port 
      */
     createClient({local_port, remote_address, remote_port}){
-        let id = `${local_port}:${remote_address}:${remote_port}`;
+        const id = `${local_port}:${remote_address}:${remote_port}`;
         if(this.clients.get(id)){
             return;
         }
@@ -58,7 +60,8 @@ class ClientManager {
         });
         this.clients.set(id, client);
         this.client_elements.appendChild(client.getElement());
-        client.initialize();
+
+        this.emit('create', client);
     }
 
     /**

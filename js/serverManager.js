@@ -1,12 +1,14 @@
 /**
  * Manages and adds UDP servers
+ * @extends {EventSystem}
  */
-class ServerManager {
+class ServerManager extends EventSystem {
 
     /**
      * Constructor
      */
     constructor(){
+        super();
 
         /**
          * Table to display all servers
@@ -22,14 +24,14 @@ class ServerManager {
         
         /**
          * Map of servers
-         * @type {Map<String, Socket>}
+         * @type {Map<String, Server>}
          */
         this.servers = new Map();
 
         // Create a new server when the server form is submitted
         this.server_form.addEventListener('submit', (event) => {
             event.preventDefault();
-            let formdata = new FormData(this.server_form);
+            const formdata = new FormData(this.server_form);
             this.createServer({
                 local_address: formdata.get('local.address'),
                 local_port: formdata.get('local.port')
@@ -57,7 +59,8 @@ class ServerManager {
         });
         this.servers.set(id, server);
         this.server_elements.appendChild(server.getElement());
-        server.initialize();
+        
+        this.emit('create', server);
     }
 
     /**
@@ -69,7 +72,6 @@ class ServerManager {
     deleteServer(id){
         const server = this.servers.get(id);
         if(server){
-            server.deinitialize();
             server.remove();
             this.servers.delete(id);
         }
