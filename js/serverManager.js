@@ -54,6 +54,8 @@ class ServerManager extends EventSystem {
         }
 
         const server = new Server(local_address, local_port);
+        
+        // On delete, delete the server
         server.on('delete', () => {
             this.deleteServer(id);
         });

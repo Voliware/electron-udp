@@ -38,13 +38,25 @@ class ClientElement extends HTMLElement {
          * Interval ms input.
          * @type {HTMLElement}
          */
-        this.ms = null;
+        this.repeat = null;
 
         /**
          * Repeat checkbox
          * @type {HTMLElement}
          */
-        this.repeat = null;
+        this.repeat_enable = null;
+
+        /**
+         * Data loss % input.
+         * @type {HTMLElement}
+         */
+        this.dataloss = null;
+
+        /**
+         * Data loss checkbox
+         * @type {HTMLElement}
+         */
+        this.dataloss_enable = null;
 
         /**
          * Send message button.
@@ -78,13 +90,21 @@ class ClientElement extends HTMLElement {
     }
 
     /**
+     * Get the data loss %, if enabled.
+     * @returns {Number} - Floating point number between 0 and 100.
+     */
+    getDataLoss(){
+        return this.dataloss_enable.checked ? parseFloat(this.dataloss.value) : 0;
+    }
+
+    /**
      * Start the message event interval
      */
     startInterval(){
         this.stopInterval();
         this.interval = setInterval(() => {
             this.dispatchMessageEvent();
-        }, parseInt(this.ms.value));
+        }, parseInt(this.repeat.value));
     }
 
     /**
@@ -98,7 +118,7 @@ class ClientElement extends HTMLElement {
      * Start or stop the message event interval according to input values.
      */
     toggleInterval(){
-        if(this.repeat.checked && parseInt(this.ms.value)){
+        if(this.repeat_enable.checked && parseInt(this.repeat.value)){
             this.startInterval();
         }
         else {
@@ -131,8 +151,10 @@ class ClientElement extends HTMLElement {
         this.delete = this.querySelector('[name="delete"]');
         this.message = this.querySelector('[name="message"]');
         this.encoding = this.querySelector('[name="encoding"]');
-        this.ms = this.querySelector('[name="ms"]');
         this.repeat = this.querySelector('[name="repeat"]');
+        this.repeat_enable = this.querySelector('[name="repeat.enable"]');
+        this.dataloss = this.querySelector('[name="dataloss"]');
+        this.dataloss_enable = this.querySelector('[name="dataloss.enable"]');
         this.send = this.querySelector('[name="send"]');
         
         // On click emit a message event with the message data
@@ -141,12 +163,12 @@ class ClientElement extends HTMLElement {
         });
 
         // On input toggle the interval 
-        this.ms.addEventListener('input', (event) => {
+        this.repeat.addEventListener('input', (event) => {
             this.toggleInterval();
         });
 
         // On chane toggle the interval 
-        this.repeat.addEventListener('change', (event) => {
+        this.repeat_enable.addEventListener('change', (event) => {
             this.toggleInterval();
         });
 

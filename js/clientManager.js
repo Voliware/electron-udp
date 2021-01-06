@@ -50,7 +50,7 @@ class ClientManager extends EventSystem {
      */
     createClient({local_port, remote_address, remote_port}){
         const id = `${local_port}:${remote_address}:${remote_port}`;
-        if(this.clients.get(id)){
+        if(this.getClient(id)){
             return;
         }
         
@@ -71,10 +71,19 @@ class ClientManager extends EventSystem {
      * @param {String} id 
      */
     deleteClient(id){
-        const client = this.clients.get(id);
+        const client = this.getClient(id);
         if(client){
             client.remove();
             this.clients.delete(id);
         }
+    }
+
+    /**
+     * Get a client from the client map.
+     * @param {String} id 
+     * @returns {Client|Undefined}
+     */
+    getClient(id){
+        return this.clients.get(id);
     }
 }

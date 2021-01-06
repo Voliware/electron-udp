@@ -61,14 +61,22 @@ class Client extends Socket {
      * Render the client's HTML element
      */
     render(){
-        this.element.setName(`${this.remote_address}:${this.remote_port}`);
+        this.element.setName(`${this.local_port}:${this.remote_address}:${this.remote_port}`);
     }
 
     /**
-     * Send a message
+     * Send a message.
+     * If dataloss is enabled, randomly fail based on the percentage.
      * @param {String} message 
      */
     sendMessage(message){
+        const random = Math.random() * 100;
+        const dataloss = random < this.element.getDataLoss();
+        if(dataloss){
+            console.log('Dataloss purposefully occurred');
+            return;
+        }
+
         const buffer = Buffer.from(message);
         this.socket.send(buffer, this.remote_port, this.remote_address);
     }
