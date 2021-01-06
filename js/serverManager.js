@@ -34,9 +34,19 @@ class ServerManager extends EventSystem {
             const formdata = new FormData(this.server_form);
             this.createServer({
                 local_address: formdata.get('local.address'),
-                local_port: formdata.get('local.port')
+                local_port: parseInt(formdata.get('local.port'))
             });
         });
+    }
+
+    /**
+     * Create a server ID for the server map
+     * @param {String} local_address 
+     * @param {Number} local_port 
+     * @returns {String}
+     */
+    createId(local_address, local_port){
+        return `${local_address}:${local_port}`;
     }
 
     /**
@@ -48,17 +58,18 @@ class ServerManager extends EventSystem {
      * @param {Number} params.local_port
      */
     createServer({local_address, local_port}){
-        const id = `${local_address}:${local_port}`
+        const id = this.createId(local_address, local_port);
         if(this.servers.get(id)){
             return;
         }
 
         const server = new Server(local_address, local_port);
-        
+
         // On delete, delete the server
         server.on('delete', () => {
             this.deleteServer(id);
         });
+        
         this.servers.set(id, server);
         this.server_elements.appendChild(server.getElement());
         

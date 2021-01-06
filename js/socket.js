@@ -7,10 +7,11 @@ class Socket extends EventSystem {
 
     /**
      * Constructor
-     * @param {Number} local_port 
+     * @param {String} [local_address='0.0.0.0']
+     * @param {Number} [local_port=0] 
      */
-    constructor(local_port = 0){
-        super(local_port);
+    constructor(local_address = '0.0.0.0', local_port = 0){
+        super();
         
         /**
          * Port to send messages from or listen on
@@ -19,11 +20,25 @@ class Socket extends EventSystem {
         this.local_port = local_port;
 
         /**
+         * Address to send messages from or listen on
+         * @type {String}
+         */
+        this.local_address = local_address;
+
+        /**
          * The socket to bind and send or receive datagrams from.
          * Must be set externally.
          * @type {Socket}
          */
         this.socket = null;
+    }
+
+    /**
+     * Get the local address
+     * @returns {String}
+     */
+    getLocalAddress(){
+        return this.local_address;
     }
 
     /**

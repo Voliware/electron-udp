@@ -38,6 +38,16 @@ class ElectronUdp {
             client.setSocket(socket);
             client.initialize();
         });
+
+        // On port establishment, update the sockets map
+        this.client_manager.on('port', port => {
+            // The socket port would have been 0
+            const socket = this.sockets.get(0);
+            if(socket){
+                this.sockets.set(port, socket);
+                this.sockets.delete(0);
+            }
+        });
         
         // On server creation, get or create a socket for the server
         this.server_manager.on('create', server => {

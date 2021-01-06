@@ -33,31 +33,74 @@ class ClientManager extends EventSystem {
             event.preventDefault();
             const formdata = new FormData(this.client_form);
             this.createClient({
-                local_port: formdata.get('local.port'),
+                local_address: formdata.get('local.address'),
+                local_port: parseInt(formdata.get('local.port')),
                 remote_address: formdata.get('remote.address'),
-                remote_port: formdata.get('remote.port')
+                remote_port: parseInt(formdata.get('remote.port'))
             });
         });
+    }
+
+    /**
+     * Create a client ID for the client map
+     * @param {String} local_address 
+     * @param {Number} local_port 
+     * @param {String} remote_address 
+     * @param {Number} remote_port 
+     * @returns {String}
+     */
+    createId(local_address, local_port, remote_address, remote_port){
+        return `${local_address}:${local_port}_${remote_address}:${remote_port}`;
     }
 
     /**
      * Create a client.
      * Add it to the client map. 
      * @param {Object} params
+     * @param {String} params.local_address
      * @param {Number} params.local_port 
      * @param {String} params.remote_address
      * @param {Number} params.remote_port 
      */
-    createClient({local_port, remote_address, remote_port}){
-        const id = `${local_port}:${remote_address}:${remote_port}`;
+    createClient({local_address, local_port, remote_address, remote_port}){
+        const id = this.createId(local_address, local_port, remote_address, remote_port);
         if(this.getClient(id)){
+            console.error('Cannot create this client, local address and port are in use');
             return;
         }
         
-        const client = new Client(local_port, remote_address, remote_port);
+        const client = new Client(local_address, local_port, remote_address, remote_port);
+
+        // On delete, delete the client
         client.on('delete', () => {
             this.deleteClient(id);
         });
+
+        // On port establishment, update client map, bubble up
+        client.on('port', port => {
+            // Recreate the current client's id
+            const current_id = this.createId(
+                client.getLocalAddress(),
+                0,
+                client.getRemoteAddress(),
+                client.getRemotePort()
+            );
+
+            // Replace it in the map using the new port value
+            if(this.clients.has(current_id)){
+                const newid = this.createId(
+                    client.getLocalAddress(),
+                    port,
+                    client.getRemoteAddress(),
+                    client.getRemotePort()
+                );
+                this.clients.set(newid, client);
+                this.clients.delete(current_id);
+            }
+
+            this.emit('port', port);
+        });
+
         this.clients.set(id, client);
         this.client_elements.appendChild(client.getElement());
 

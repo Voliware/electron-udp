@@ -10,19 +10,7 @@ class Server extends Socket {
      * @param {Number} local_port 
      */
     constructor(local_address, local_port){
-        super();
-
-        /**
-         * Host to listen on
-         * @type {String}
-         */
-        this.local_address = local_address;
-        
-        /**
-         * Port to listen on
-         * @type {Number}
-         */
-        this.local_port = local_port;
+        super(local_address, local_port);
 
         /**
          * Server element

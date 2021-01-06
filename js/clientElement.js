@@ -167,7 +167,7 @@ class ClientElement extends HTMLElement {
             this.toggleInterval();
         });
 
-        // On chane toggle the interval 
+        // On change toggle the interval 
         this.repeat_enable.addEventListener('change', (event) => {
             this.toggleInterval();
         });
