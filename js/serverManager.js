@@ -45,7 +45,7 @@ class ServerManager extends EventSystem {
      * @param {Number} local_port 
      * @returns {String}
      */
-    createId(local_address, local_port){
+    createServerId(local_address, local_port){
         return `${local_address}:${local_port}`;
     }
 
@@ -58,7 +58,7 @@ class ServerManager extends EventSystem {
      * @param {Number} params.local_port
      */
     createServer({local_address, local_port}){
-        const id = this.createId(local_address, local_port);
+        const id = this.createServerId(local_address, local_port);
         if(this.servers.get(id)){
             return;
         }

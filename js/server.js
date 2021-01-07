@@ -43,7 +43,8 @@ class Server extends Socket {
      * Render the server's HTML element
      */
     render(){
-        this.element.setName(`${this.local_address}:${this.local_port}`);
+        const addr = this.socket.address();
+        this.element.setName(`${addr.address}:${addr.port}`);
     }
 
     /**
@@ -58,11 +59,8 @@ class Server extends Socket {
             return;
         }
 
-        // On listening append to the messages textarea
-		this.socket.on('listening', () => {
-            this.element.appendMessage(`Listening`)
-        });
-        
+        this.element.appendMessage(`Listening`);
+
         // On message append to the messages textarea
 		this.socket.on('message', (message, rinfo) => {
             this.element.appendMessage(message, rinfo)

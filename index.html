@@ -151,6 +151,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">Interval in ms</span>
                                 <input type="number" name="repeat" class="form-control" min="0">
+                                <label class="input-group-text">Enable</label>
                                 <div class="input-group-text">
                                     <input class="form-check-input" type="checkbox" name="repeat.enable">
                                 </div>
@@ -206,6 +207,6 @@
     <script src="js/server.js"></script>
     <script src="js/serverManager.js"></script>
     <script src="js/app.js"></script>
-    <script>const electron_udp = new ElectronUdp();</script>
+    <script>const app = new App();</script>
 </body>
 </html>

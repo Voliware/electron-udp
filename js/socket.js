@@ -50,7 +50,7 @@ class Socket extends EventSystem {
     }
 
     /**
-     * Set the socket
+     * Set the socket.
      * @param {Socket} socket 
      */
     setSocket(socket){

@@ -131,8 +131,8 @@ class ClientElement extends HTMLElement {
      */
     dispatchMessageEvent(){
         const detail = this.getMessage();
-        const message_event = new CustomEvent('message', {detail});
-        this.dispatchEvent(message_event);
+        const event = new CustomEvent('message', {detail});
+        this.dispatchEvent(event);
     }
 
     /**

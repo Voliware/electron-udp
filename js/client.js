@@ -78,14 +78,13 @@ class Client extends Socket {
      * Render the client's HTML element
      */
     render(){
-        this.element.setName(`${this.local_address}:${this.local_port} -> ${this.remote_address}:${this.remote_port}`);
+        const addr = this.socket.address();
+        this.element.setName(`${addr.address}:${addr.port} -> ${this.remote_address}:${this.remote_port}`);
     }
 
     /**
      * Send a message.
      * If dataloss is enabled, randomly fail based on the percentage.
-     * If local port is 0, after the first message is sent and the OS gives out
-     * a port, update the local port and emit a message about it.
      * @param {String} message 
      */
     sendMessage(message){
@@ -99,14 +98,7 @@ class Client extends Socket {
 
         // Send message
         const buffer = Buffer.from(message);
-        this.socket.send(buffer, this.remote_port, this.remote_address, () => {
-            // If local port was 0, we should know the real port after sending a msg
-            if(this.local_port === 0){
-                this.local_port = this.socket.address().port;
-                this.emit('port', this.local_port);
-                this.render();
-            }
-        });
+        this.socket.send(buffer, this.remote_port, this.remote_address);
     }
 
     /**

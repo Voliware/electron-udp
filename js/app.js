@@ -1,7 +1,7 @@
 /**
  * Main application.
  */
-class ElectronUdp {
+class App {
 
     /**
      * Constructor
@@ -28,50 +28,68 @@ class ElectronUdp {
         /**
          * Map of sockets.
          * Can be shared between multiple clients/servers.
-         * @type {Map<Number, Socket>
+         * @type {Map<String, Socket>
          */
         this.sockets = new Map();
 
         // On client creation, get or create a socket for the client
-        this.client_manager.on('create', client => {
-            const socket = this.getSocket(client.getLocalPort());
+        this.client_manager.on('create', async (client) => {
+            const id = this.createSocketId(client.getLocalAddress(), client.getLocalPort());
+            let socket = this.getSocket(id);
+            if(!socket){
+                socket = await this.createSocket(client.getLocalAddress(), client.getLocalPort());
+            }
             client.setSocket(socket);
             client.initialize();
         });
-
-        // On port establishment, update the sockets map
-        this.client_manager.on('port', port => {
-            // The socket port would have been 0
-            const socket = this.sockets.get(0);
-            if(socket){
-                this.sockets.set(port, socket);
-                this.sockets.delete(0);
-            }
-        });
         
         // On server creation, get or create a socket for the server
-        this.server_manager.on('create', server => {
-            const socket = this.getSocket(server.getLocalPort());
+        this.server_manager.on('create', async (server) => {
+            const id = this.createSocketId(server.getLocalAddress(), server.getLocalPort());
+            let socket = this.getSocket(id);
+            if(!socket){
+                socket = await this.createSocket(server.getLocalAddress(), server.getLocalPort());
+            }
             server.setSocket(socket);
             server.initialize();
         });
     }
 
     /**
-     * Get or create a UDP socket based on a port.
-     * This allows sharing a socket between clients and servers.
+     * Create a socket id 
+     * @param {String} address 
      * @param {Number} port 
+     * @returns {String}
+     */
+    createSocketId(address, port){
+        return `${address}:${port}`;
+    }
+
+    /**
+     * Create a socket and add it to the map once bound.
+     * Once bound, returns socket.
+     * @param {String} [address='0.0.0.0'] 
+     * @param {Number} [port=0] 
+     * @returns {Promise<Socket>}
+     */
+    createSocket(address = '0.0.0.0', port = 0){
+        const socket = Dgram.createSocket('udp4');
+        return new Promise((resolve, reject) => {
+            socket.bind(port, address, () => {
+                const addr = socket.address();
+                const id = this.createSocketId(addr.address, addr.port);
+                this.sockets.set(id, socket);
+                resolve(socket);
+            });
+        })
+    }
+
+    /**
+     * Get a UDP socket based on the id.
+     * @param {String} id
      * @returns {Socket}
      */
-    getSocket(port){
-        let socket = this.sockets.get(port);
-        if(!socket){
-            socket = Dgram.createSocket('udp4');
-            if(port > 0){
-                socket.bind(port);
-            }
-            this.sockets.set(port, socket);
-        }
-        return socket;
+    getSocket(id){
+        return this.sockets.get(id);
     }
 }

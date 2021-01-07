@@ -45,12 +45,10 @@ class ClientManager extends EventSystem {
      * Create a client ID for the client map
      * @param {String} local_address 
      * @param {Number} local_port 
-     * @param {String} remote_address 
-     * @param {Number} remote_port 
      * @returns {String}
      */
-    createId(local_address, local_port, remote_address, remote_port){
-        return `${local_address}:${local_port}_${remote_address}:${remote_port}`;
+    createClientId(local_address, local_port){
+        return `${local_address}:${local_port}`;
     }
 
     /**
@@ -63,7 +61,7 @@ class ClientManager extends EventSystem {
      * @param {Number} params.remote_port 
      */
     createClient({local_address, local_port, remote_address, remote_port}){
-        const id = this.createId(local_address, local_port, remote_address, remote_port);
+        const id = this.createClientId(local_address, local_port);
         if(this.getClient(id)){
             console.error('Cannot create this client, local address and port are in use');
             return;
@@ -74,31 +72,6 @@ class ClientManager extends EventSystem {
         // On delete, delete the client
         client.on('delete', () => {
             this.deleteClient(id);
-        });
-
-        // On port establishment, update client map, bubble up
-        client.on('port', port => {
-            // Recreate the current client's id
-            const current_id = this.createId(
-                client.getLocalAddress(),
-                0,
-                client.getRemoteAddress(),
-                client.getRemotePort()
-            );
-
-            // Replace it in the map using the new port value
-            if(this.clients.has(current_id)){
-                const newid = this.createId(
-                    client.getLocalAddress(),
-                    port,
-                    client.getRemoteAddress(),
-                    client.getRemotePort()
-                );
-                this.clients.set(newid, client);
-                this.clients.delete(current_id);
-            }
-
-            this.emit('port', port);
         });
 
         this.clients.set(id, client);
